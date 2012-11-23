@@ -96,3 +96,29 @@
      ((zero? n) #t)
      (else
       (< (sub1 n) (sub1 m))))))
+
+;;; page 74
+(define =
+  (lambda (n m)
+    (cond
+     ((< n m) #f)
+     ((> n m) #f)
+     (else #t))))
+
+;;; page 74
+(define my-expt
+  (lambda (n m)
+    (cond
+     ((zero? m) 1)
+     (else
+      (x n (my-expt n (sub1 m)))))))
+
+;;; page 76
+(define length
+  (lambda (lat)
+    (cond
+     ((null? lat) 0)
+     (else
+      (o+ 1 (length (cdr lat)))))))
+
+(define pick)
