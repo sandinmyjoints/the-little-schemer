@@ -3,6 +3,17 @@
   (and (not (pair? x))
        (not (null? x))))
 
+;;;
+(define rember
+  (lambda (a lat)
+    (cond
+     ((null? lat) (quote ()))
+     (else
+      (cond
+       ((eq? (car lat) a) (rember a (cdr lat)))
+       (else
+        (cons (car lat) (rember a (cdr lat)))))))))
+
 ;;; page 53
 (define multirember
   (lambda (a lat)
@@ -121,4 +132,90 @@
      (else
       (o+ 1 (length (cdr lat)))))))
 
-(define pick)
+(define pick
+  (lambda (n lat)
+    (cond
+     ((null? lat) lat)
+     ((zero? n) (car lat))
+     (else
+      (pick (sub1 n) (cdr lat))))))
+
+;;; page 77
+(define rempick
+  (lambda (n lat)
+    (cond
+     ((null? lat) lat)
+     ((zero? (sub1 n)) (cdr lat))
+     (else
+      (cons (car lat) (rempick (sub1 n) (cdr lat)))))))
+
+(define no-nums
+  (lambda (lat)
+    (cond
+     ((null? lat) lat)
+     (else
+      (cond
+       ((number? (car lat)) (no-nums (cdr lat)))
+       (else
+        (cons (car lat) (no-nums (cdr lat)))))))))
+
+;;; page 78
+(define all-nums
+  (lambda (lat)
+    (cond
+     ((null? lat) lat)
+    (else
+     (cond
+      ((number? (car lat)) (cons (car lat) (all-nums (cdr lat))))
+      (else
+       (all-nums (cdr lat))))))))
+
+
+(define eqan?
+  (lambda (a1 a2)
+    (cond
+     ((and (number? a1) (number? a2))
+      (= a1 a2))
+     ((or (number? a1) (number? a2)) #f)
+     (else
+      (eq? a1 a2)))))
+
+(define occur
+  (lambda (a lat)
+    (cond
+     ((null? lat) 0)
+     (else
+      (cond
+       ((eqan? (car lat) a) (add1 (occur a (cdr lat))))
+       (else
+        (occur a (cdr lat))))))))
+
+;;; page 79
+(define one?
+  (lambda (a)
+    (= a 1)))
+
+
+;;; page 79
+(define rempick2
+  (lambda (n lat)
+    (cond
+     ((null? lat) lat)
+     ((one? n) (cdr lat))
+     (else
+      (cons (car lat) (rempick2 (sub1 n) (cdr lat)))))))
+
+;;; 81
+(define rember*
+  (lambda (a l)
+    (cond
+     ((null? l) ())
+     (else
+      (cond
+       ((atom? (car l))
+        (cond
+         ((eq? (car l) a) (rember* a (cdr l)))
+         (else
+          (cons (car l) (rember* a (cdr l))))))
+       (else
+        (cons (rember* a (car l)) (rember* a (cdr l)))))))))
