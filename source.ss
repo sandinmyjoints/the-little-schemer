@@ -271,3 +271,38 @@
         (cons (car l) (insertL* new old (cdr l))))))
      (else
       (cons (insertL* new old (car l)) (insertL* new old (cdr l)))))))
+
+;;; page 86
+(define member*
+  (lambda (a l)
+    (cond
+     ((null? l) #f)
+     ((atom? (car l)) (or (eq? a (car l)) (member* a (cdr l))))
+     (else
+      (or (member* a (car l)) (member* a (cdr l)))))))
+
+;;; page 88
+(define leftmost
+  (lambda (l)
+    (cond
+     ((atom? (car l)) (car l))
+     (else
+      (leftmost (car l))))))
+
+;;; page 91
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+     ((and (null? l1) (null? l2)) #t)
+     ((or (null? l1) (null? l2)) #f)
+     (else
+      (cond
+       ((and (atom? (car l1)) (atom? (car l2)))
+        (cond
+         ((eqan? (car l1) (car l2)) (eqlist? (cdr l1) (cdr l2)))
+         (else #f)))
+       (else
+        (cond
+         ((or (atom? (car l1)) (atom? (car l2))) #f)
+         (else
+          (and (eqlist? (car l1) (car l2)) (eqlist? (cdr l1) (cdr l2)))))))))))
