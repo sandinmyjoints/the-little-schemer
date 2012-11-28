@@ -4,6 +4,7 @@
     (and (not (pair? x))
          (not (null? x)))))
 
+;;;
 (define member?
   (lambda (a l)
     (cond
@@ -56,10 +57,12 @@
      (else
       (cons (car lat) (multisubst new old (cdr lat)))))))
 
+;;;
 (define add1
   (lambda (a)
     (+ a 1)))
 
+;;;
 (define sub1
   (lambda (a)
     (- a 1)))
@@ -141,6 +144,7 @@
      (else
       (o+ 1 (length (cdr lat)))))))
 
+;;;
 (define pick
   (lambda (n lat)
     (cond
@@ -158,6 +162,7 @@
      (else
       (cons (car lat) (rempick (sub1 n) (cdr lat)))))))
 
+;;;
 (define no-nums
   (lambda (lat)
     (cond
@@ -179,7 +184,7 @@
       (else
        (all-nums (cdr lat))))))))
 
-
+;;;
 (define eqan?
   (lambda (a1 a2)
     (cond
@@ -189,6 +194,7 @@
      (else
       (eq? a1 a2)))))
 
+;;;
 (define occur
   (lambda (a lat)
     (cond
@@ -204,15 +210,15 @@
   (lambda (a)
     (= a 1)))
 
-
 ;;; page 79
-(define rempick2
+(define rempick
+  ;; Simplified.
   (lambda (n lat)
     (cond
      ((null? lat) lat)
      ((one? n) (cdr lat))
      (else
-      (cons (car lat) (rempick2 (sub1 n) (cdr lat)))))))
+      (cons (car lat) (rempick (sub1 n) (cdr lat)))))))
 
 ;;; page 81
 (define rember*
@@ -327,12 +333,14 @@
       (eqlist? s1 s2)))))
 
 ;;; page 93
-(define re-eqlist?
+(define eqlist?
+  ;; Simplified.
   (lambda (l1 l2)
     (equal? l1 l2)))
 
 ;;; 94
-(define simpl-rember
+(define rember
+  ;; Simplified.
   (lambda (s l)
     (cond
      ((null? l) ('()))
@@ -357,12 +365,13 @@
       (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
      (else #f))))
 
-(define simp-numbered?
+(define numbered?
+  ;; Simplified.
   ;; `aexp` is understood to be an arithmetic expression.
   (lambda (aexp)
     (cond
      ((atom? aexp) (number? aexp))
-     ((and (simp-numbered? (car aexp)) (simp-numbered? (car (cdr (cdr aexp))))))
+     ((and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
      (else #f))))
 
 ;;; 103
@@ -375,13 +384,14 @@
      ((eq? (car (cdr nexp)) 'my-expt)  (my-expt (value (car nexp)) (value (car (cdr (cdr nexp)))))))))
 
 ;;; 104
-(define new-value
+(define value
+  ;; Rewritten.
   (lambda (nexp)
     (cond
      ((atom? nexp) nexp)
-     ((eq? (car nexp) 'o+)       (o+ (new-value (car (cdr nexp))) (new-value (car (cdr (cdr nexp))))))
-     ((eq? (car nexp) 'x)        (x (new-value (car (cdr nexp))) (new-value (car (cdr (cdr nexp))))))
-     ((eq? (car nexp) 'my-expt)  (my-expt (new-value (car (cdr nexp))) (new-value (car (cdr (cdr nexp)))))))))
+     ((eq? (car nexp) 'o+)       (o+ (value (car (cdr nexp))) (value (car (cdr (cdr nexp))))))
+     ((eq? (car nexp) 'x)        (x (value (car (cdr nexp))) (value (car (cdr (cdr nexp))))))
+     ((eq? (car nexp) 'my-expt)  (my-expt (value (car (cdr nexp))) (value (car (cdr (cdr nexp)))))))))
 
 ;;; 105
 (define 1st-sub-exp
@@ -399,13 +409,14 @@
     (car aexp)))
 
 ;;; 106
-(define new-new-value
+(define value
+  ;; Rewritten.
   (lambda (nexp)
     (cond
      ((atom? nexp) nexp)
-     ((eq? (operator nexp) 'o+)       (o+ (new-new-value (1st-sub-exp nexp)) (new-new-value (2nd-sub-exp nexp))))
-     ((eq? (operator nexp) 'x)        (x (new-new-value (1st-sub-exp nexp)) (new-new-value (2nd-sub-exp nexp))))
-     ((eq? (operator nexp) 'my-expt)  (my-expt (new-new-value (1st-sub-exp nexp)) (new-new-value (2nd-sub-exp nexp)))))))
+     ((eq? (operator nexp) 'o+)       (o+ (value (1st-sub-exp nexp)) (value (2nd-sub-exp nexp))))
+     ((eq? (operator nexp) 'x)        (x (value (1st-sub-exp nexp)) (value (2nd-sub-exp nexp))))
+     ((eq? (operator nexp) 'my-expt)  (my-expt (value (1st-sub-exp nexp)) (value (2nd-sub-exp nexp)))))))
 
 ;;; 108
 (define sero?
