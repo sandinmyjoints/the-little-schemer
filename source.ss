@@ -1,7 +1,8 @@
 ;;; page 10
-(define (atom? x)
-  (and (not (pair? x))
-       (not (null? x))))
+(define atom?
+  (lambda (x)
+    (and (not (pair? x))
+         (not (null? x)))))
 
 ;;;
 (define rember
@@ -61,7 +62,7 @@
     (cond
      ((zero? m) n)
      (else
-      (plus (add1 n) (sub1 m))))))
+      (o+ (add1 n) (sub1 m))))))
 
 ;;; page 64
 (define addtup
