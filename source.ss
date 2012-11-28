@@ -4,6 +4,14 @@
     (and (not (pair? x))
          (not (null? x)))))
 
+(define member?
+  (lambda (a l)
+    (cond
+     ((null? l) #f)
+     ((equal? a (car l)) #t)
+     (else
+      (member a (cdr l))))))
+
 ;;;
 (define rember
   (lambda (a lat)
@@ -380,3 +388,70 @@
   (lambda (aexp)
     (car (cdr aexp))))
 
+;;; 106
+(define 2nd-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr aexp)))))
+
+;;; 106
+(define operator
+  (lambda (aexp)
+    (car aexp)))
+
+;;; 106
+(define new-new-value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     ((eq? (operator nexp) 'o+)       (o+ (new-new-value (1st-sub-exp nexp)) (new-new-value (2nd-sub-exp nexp))))
+     ((eq? (operator nexp) 'x)        (x (new-new-value (1st-sub-exp nexp)) (new-new-value (2nd-sub-exp nexp))))
+     ((eq? (operator nexp) 'my-expt)  (my-expt (new-new-value (1st-sub-exp nexp)) (new-new-value (2nd-sub-exp nexp)))))))
+
+;;; 108
+(define sero?
+  (lambda (n)
+    (null? n)))
+
+;;; 108
+(define edd1
+  (lambda (n)
+    (cons '() n)))
+
+;;; 108
+(define zub1
+  (lambda (n)
+    (cdr n)))
+
+;;; 108
+(define zo+
+  (lambda (n m)
+    (cond
+     ((sero? m) n)
+     (else
+      (zo+ (edd1 n) (zub1 m))))))
+
+;;; 111
+(define set?
+  (lambda (lat)
+    (cond
+     ((null? lat) #t)
+     ((member? (car lat) (cdr lat)) #f)
+     (else
+       (set? (cdr lat))))))
+
+;;; 112
+(define makeset
+  (lambda (lat)
+    (cond
+     ((null? lat) ())
+     ((member? (car lat) (cdr lat)) (makeset (cdr lat)))
+     (else
+      (cons (car lat) (makeset (cdr lat)))))))
+
+;;; 112
+(define makeset
+  ;; Using multirember.
+  (lambda (lat)
+    (cond
+     ((null? lat) ())
+     (makeset (cons (car lat) (multirember (car lat) (cdr lat)))))))
