@@ -307,3 +307,76 @@
          ((or (atom? (car l1)) (atom? (car l2))) #f)
          (else
           (and (eqlist? (car l1) (car l2)) (eqlist? (cdr l1) (cdr l2)))))))))))
+
+;;; 92
+(define equal?
+  (lambda (s1 s2)
+    (cond
+     ((and (atom? s1) (atom? s2))
+      (eqan? s1 s2))
+     ((or (atom? s1) (atom? s2)) #f)
+     (else
+      (eqlist? s1 s2)))))
+
+;;; page 93
+(define re-eqlist?
+  (lambda (l1 l2)
+    (equal? l1 l2)))
+
+;;; 94
+(define simpl-rember
+  (lambda (s l)
+    (cond
+     ((null? l) ('()))
+     ((equal? (car l) s) (cdr l))
+     (else (cons (car l)
+                 (rember s
+                         (cdr l)))))))))
+
+;;; note: s-exp is an atom or a (possibly empty) list of s-exps.
+;;; note: * functions recur on both car and cdr
+
+;;; 101
+(define numbered?
+  (lambda (aexp)
+    (cond
+     ((atom? aexp) (number? aexp))
+     ((eq? (car (cdr aexp)) '+)
+      (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
+     ((eq? (car (cdr aexp)) 'x)
+      (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
+     ((eq? (car (cdr aexp)) 'up-arrow)
+      (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
+     (else #f))))
+
+(define simp-numbered?
+  ;; `aexp` is understood to be an arithmetic expression.
+  (lambda (aexp)
+    (cond
+     ((atom? aexp) (number? aexp))
+     ((and (simp-numbered? (car aexp)) (simp-numbered? (car (cdr (cdr aexp))))))
+     (else #f))))
+
+;;; 103
+(define value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     ((eq? (car (cdr nexp)) 'o+)       (o+ (value (car nexp)) (value (car (cdr (cdr nexp))))))
+     ((eq? (car (cdr nexp)) 'x)        (x (value (car nexp)) (value (car (cdr (cdr nexp))))))
+     ((eq? (car (cdr nexp)) 'my-expt)  (my-expt (value (car nexp)) (value (car (cdr (cdr nexp)))))))))
+
+;;; 104
+(define new-value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     ((eq? (car nexp) 'o+)       (o+ (new-value (car (cdr nexp))) (new-value (car (cdr (cdr nexp))))))
+     ((eq? (car nexp) 'x)        (x (new-value (car (cdr nexp))) (new-value (car (cdr (cdr nexp))))))
+     ((eq? (car nexp) 'my-expt)  (my-expt (new-value (car (cdr nexp))) (new-value (car (cdr (cdr nexp)))))))))
+
+;;; 105
+(define 1st-sub-exp
+  (lambda (aexp)
+    (car (cdr aexp))))
+
