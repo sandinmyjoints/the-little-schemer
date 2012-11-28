@@ -9,7 +9,7 @@
   (lambda (a l)
     (cond
      ((null? l) #f)
-     ((equal? a (car l)) #t)
+     ((eq? a (car l)) #t)
      (else
       (member a (cdr l))))))
 
@@ -451,6 +451,15 @@
        (set? (cdr lat))))))
 
 ;;; 112
+(define member?
+  ;; Rewritten with equal?.
+  (lambda (a l)
+    (cond
+     ((null? l) #f)
+     ((equal? a (car l)) #t)
+     (else
+      (member a (cdr l))))))
+
 (define makeset
   (lambda (lat)
     (cond
@@ -460,9 +469,22 @@
       (cons (car lat) (makeset (cdr lat)))))))
 
 ;;; 112
+(define multirember
+  ;; Rewritten with equal?.
+  (lambda (a lat)
+    (cond
+     ((null? lat) (quote ()))
+     (else
+      (cond
+       ((equal? (car lat) a)
+        (multirember a (cdr lat)))
+        (else (cons (car lat)
+                    (multirember a
+                                 (cdr lat)))))))))
 (define makeset
   ;; Using multirember.
   (lambda (lat)
     (cond
      ((null? lat) ())
      (makeset (cons (car lat) (multirember (car lat) (cdr lat)))))))
+
