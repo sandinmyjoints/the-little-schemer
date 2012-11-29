@@ -543,3 +543,46 @@
      (else
       (or (subset? set1 set2)
           (intersect? (cdr set1) set2))))))
+
+;;; 116
+(define intersect
+ (lambda (set1 set2)
+   (cond
+    ((null? set1) '())
+    (else
+     (cond
+      ((member? (car set1) set2)
+       (cons (car set1) (intersect (cdr set1) set2)))
+      (else
+       (intersect (cdr set1) set2)))))))
+
+;;; 116
+(define union
+  ;; Mine.
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) (makeset set2))
+     ((null? set2) (makeset set1))
+     (else
+      (makeset (cons (car set1) (cons (car set2) (union (cdr set1) (cdr set2)))))))))
+
+(define union
+  ;; TLS's.
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) set2)
+     ((member? (car set1) set2)
+      (union (cdr set1) set2))
+     (else
+      (cons (car set1) (union (cdr set1) set2))))))
+
+;;; 117 
+(define intersectall
+  (lambda (l-set)
+    (cond
+     ((null? (cdr l-set)) (car l-set))
+     (else
+      (intersect (car l-set) (intersectall (cdr l-set)))))))
+
+
+      
