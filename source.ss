@@ -13,6 +13,14 @@
      (else
       (member a (cdr l))))))
 
+;;; 44
+(define firsts
+  (lambda (l)
+    (cond
+     ((null? l) '())
+     (else
+      (cons (car (car l)) (firsts (cdr l)))))))
+
 ;;;
 (define rember
   (lambda (a lat)
@@ -584,5 +592,42 @@
      (else
       (intersect (car l-set) (intersectall (cdr l-set)))))))
 
+;;;
+(define a-pair?
+  (lambda (x)
+    (null? (cdr (cdr x)))))
 
-      
+;;; 119
+(define first
+  (lambda (p)
+    (car p)))
+
+;;; 119
+(define second
+  (lambda (p)
+    (car (cdr p))))
+
+;;; 119
+(define build
+  (lambda (s1 s2)
+    (cons s1 (cons s2 '()))))
+
+;;; 119
+(define third
+  (lambda (p)
+    (car (cdr (cdr p)))))
+
+;;; 120
+(define fun?
+  (lambda (rel)
+    (set? (firsts rel))))
+
+;;; 120
+(define revrel
+  (lambda (rel)
+    (cond
+     ((null? rel) '())
+     (else
+      (cons
+       (build (second (car rel)) (first (car rel)))
+       (revrel (cdr rel)))))))
