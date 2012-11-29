@@ -481,6 +481,7 @@
         (else (cons (car lat)
                     (multirember a
                                  (cdr lat)))))))))
+
 (define makeset
   ;; Using multirember.
   (lambda (lat)
@@ -488,3 +489,57 @@
      ((null? lat) ())
      (makeset (cons (car lat) (multirember (car lat) (cdr lat)))))))
 
+;;;
+(define subset?
+  ;; My initial version.
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) #t)
+     ((null? set2) #f)
+     (else
+      ;; remove each of set2 from set1
+      (subset? (multirember (car set2) set1) (cdr set2))))))
+
+;;;
+(define subset?
+  ;; TLS's version.
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) #t)
+     ((member? (car set1) set2) (subset? (cdr set1) set2))
+     (else #f))))
+
+;;;
+(define subset?
+  ;; Using and.
+  (lambda (set1 set2)
+    (cond
+     ((null? set1) #t)
+     (else
+      (and (member? (car set1) set2) (subset? (cdr set1) set2))))))
+
+;;;
+(define eqset?
+  ;; My initial eqset?
+  (lambda (set1 set2)
+    (cond
+     ((and (null? set1) (null? set2)) #t)
+     ((or (null? set1) (null? set2)) #f)
+     (else
+      (eqset? (multirember (car set1) set1) (multirember (car set1) set2))))))
+
+;;;
+(define eqset?
+  ;; TLS's eqset?
+  (lambda (set1 set2)
+    (and (subset? set1 set2) (subset? set2 set1))))
+
+;;;
+(define intersect?
+  ;; My initial intersect?
+  (lambda (set1 set2)
+    (cond
+     ((or (null? set1) (null? set2)) #f)
+     (else
+      (or (subset? set1 set2)
+          (intersect? (cdr set1) set2))))))
