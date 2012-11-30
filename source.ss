@@ -631,3 +631,19 @@
       (cons
        (build (second (car rel)) (first (car rel)))
        (revrel (cdr rel)))))))
+
+
+;;; 122
+(define fullfun?
+  ;; My fullfun?
+  (lambda (fun)
+    (and (fun? fun) (fun? (revrel fun)))))
+
+;;; 122
+(define fullfun?
+  ;; TLS's
+  (lambda (fun)
+    (fun? (revrel fun))))
+
+;;; Chapter 8
+
