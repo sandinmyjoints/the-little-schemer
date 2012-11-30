@@ -593,7 +593,7 @@
      (else
       (cons (car set1) (union (cdr set1) set2))))))
 
-;;; 117 
+;;; 117
 (define intersectall
   (lambda (l-set)
     (cond
@@ -698,6 +698,7 @@
      (else
       (cons (car l) ((insertL-f test?) new old (cdr l))))))))
 
+;;; 130
 (define insertR-f
   (lambda (test?)
     (lambda (new old l)
@@ -707,3 +708,32 @@
       (cons old (cons new ((insertR-f test?) new old (cdr l)))))
      (else
       (cons (car l) ((insertR-f test?) new old (cdr l))))))))
+
+;;; 130
+(define insert-g
+  (lambda (test? inserter)
+    (lambda (new old l)
+      (cond
+       ((null? l) ())
+       ((funcall test? old (car l))
+        (funcall inserter new old ((insert-g test? inserter) new old (cdr l))))
+       (else
+        (cons (car l) ((insert-g test? inserter) new old (cdr l))))))))
+
+(define consL
+  (lambda (new old l)
+    (cons new (cons old l))))
+
+(define consR
+  (lambda (new old l)
+    (cons old (cons new l))))
+
+(define inserter-R
+  (lambda (insert-fn)
+    (lambda (new old l)
+      (cons old (cons new ((funcall insert-fn test?) new old (cdr l))))))
+
+(define inserter-L
+  (lambda (insert-fn)
+    (lambda (new old l)
+      (cons new (cons old ((funcall insert-fn test?) new old (cdr l))))))
