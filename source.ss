@@ -1,8 +1,6 @@
-;;; page 10
-(define atom?
-  (lambda (x)
-    (and (not (pair? x))
-         (not (null? x)))))
+#lang racket
+
+(load "common.ss")
 
 ;;;
 (define member?
