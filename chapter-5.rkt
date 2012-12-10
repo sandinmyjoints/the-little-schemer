@@ -2,6 +2,8 @@
 
 (load "common.rkt")
 
+;;; * functions recur on both car and cdr.
+
 ;;; page 81
 (define rember*
   (lambda (a l)

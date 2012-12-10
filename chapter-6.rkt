@@ -1,6 +1,6 @@
-#lang racket
+#lang racket/load
 
-(load "common.rkt")
+(load "/Users/wbert/scm/the-little-schemer/common.rkt")
 
 ;;; 101
 (define numbered?

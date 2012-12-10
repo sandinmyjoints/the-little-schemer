@@ -1,4 +1,4 @@
-#lang racket
+#lang racket/load
 
 (load "common.rkt")
 

@@ -1,9 +1,8 @@
-#lang racket
+#lang racket/load
 
-(load "common.rkt")
+(load "/Users/wbert/scm/the-little-schemer/common.rkt")
 
 ;;; note: s-exp is an atom or a (possibly empty) list of s-exps.
-;;; note: * functions recur on both car and cdr
 
 (define (funcall fun . args)
   ;; (A little helper for Scheme.)
@@ -25,7 +24,7 @@
 (define eq?-salad (eq?-c 'salad))
 
 ;;; 128
-(define rember-f
+(define rember-f-1
   ;; Rewritten
   (lambda (test?)
     (lambda (a l)
@@ -34,7 +33,7 @@
        ((funcall test? a (car l))
         (cdr l))
        (else
-        (cons (car l) ((rember-f test?) a (cdr l))))))))
+        (cons (car l) ((rember-f-1 test?) a (cdr l))))))))
 
 ;;; 130
 (define insertL-f
