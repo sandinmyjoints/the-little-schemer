@@ -378,7 +378,7 @@
       (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
      ((eq? (car (cdr aexp)) 'x)
       (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
-     ((eq? (car (cdr aexp)) 'up-arrow)
+     ((eq? (car (cdr aexp)) 'my-expt)
       (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
      (else #f))))
 
@@ -709,31 +709,63 @@
      (else
       (cons (car l) ((insertR-f test?) new old (cdr l))))))))
 
-;;; 130
+;;; 131
 (define insert-g
-  (lambda (test? inserter)
+  (lambda (inserter)
     (lambda (new old l)
       (cond
        ((null? l) ())
-       ((funcall test? old (car l))
-        (funcall inserter new old ((insert-g test? inserter) new old (cdr l))))
+       ((funcall eq? old (car l))
+        (funcall inserter new old ((insert-g inserter) new old (cdr l))))
        (else
-        (cons (car l) ((insert-g test? inserter) new old (cdr l))))))))
+        (cons (car l) ((insert-g inserter) new old (cdr l))))))))
 
-(define consL
+(define seqL
   (lambda (new old l)
     (cons new (cons old l))))
 
-(define consR
+(define seqR
   (lambda (new old l)
     (cons old (cons new l))))
 
-(define inserter-R
-  (lambda (insert-fn)
-    (lambda (new old l)
-      (cons old (cons new ((funcall insert-fn test?) new old (cdr l))))))
+;;; 132
+(define insertL (insert-g seqL))
 
-(define inserter-L
-  (lambda (insert-fn)
-    (lambda (new old l)
-      (cons new (cons old ((funcall insert-fn test?) new old (cdr l))))))
+(define insertR (insert-g seqR))
+
+(define insertL
+  (insert-g
+   (lambda (new old l)
+     (cons news (cons old (cdr l))))))
+
+(define insertR
+  (insert-g
+   (lambda (new old l)
+     (cons old (cons new (cdr l))))))
+
+(define seqS
+  (lambda (new old l)
+    (cons new  l)))
+
+(define subst
+  (insert-g seqS))
+
+;;; page 134
+(define atom-to-function
+  (lambda (a)
+    (cond
+     ((eq? a (quote o+)) o+)
+     ((eq? a (quote x)) x)
+     (else
+      my-expt))))
+
+;;; 135
+(define value
+  (lambda (nexp)
+    (cond
+     ((atom? nexp) nexp)
+     (else
+      (funcall
+       (atom-to-function (operator nexp))
+       (1st-sub-exp nexp)
+       (2nd-sub-exp nexp))))))
