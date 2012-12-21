@@ -769,3 +769,82 @@
        (atom-to-function (operator nexp))
        (1st-sub-exp nexp)
        (2nd-sub-exp nexp))))))
+
+;;; 135
+(define multirember-f
+  (lambda (test?)    
+    (lambda (a lat)
+      (cond
+       ((null? lat) '())
+       ((test? a (car lat))        
+        ((multirember-f test?) a (cdr lat)))
+       (else
+        (cons (car lat) ((multirember-f test?) a (cdr lat))))))))
+
+;;; 137
+(define multirember&co
+  (lambda (a lat col)
+    (cond
+     ((null? lat)
+      (col (quote ()) (quote ())))
+     ((eq? (car lat) a)
+      (multirember&co a
+                      (cdr lat)
+                      (lambda (newlat seen)
+                        (col newlat
+                             (cons (car lat) seen)))))
+     (else
+      (multirember&co a
+                      (cdr lat)
+                      (lambda (newlat seen)
+                        (col (cons (car lat) newlat)
+                             seen)))))))
+
+;;; 138
+(define a-friend
+       (lambda (x y)
+         (null? y)))
+
+;;; 141
+(define multiinsertLR
+  (lambda (new oldL oldR lat)
+    (cond
+     ((null? lat) '())
+     ((eq? oldL (car lat))
+      (cons new
+            (cons (car lat)
+                  (multiinsertLR new oldL oldR (cdr lat)))))
+     ((eq? oldR (car lat))
+      (cons (car lat)
+            (cons new
+                  (multiinsertLR new oldL oldR (cdr lat)))))
+     (else
+      (cons (car lat) (multiinsertLR new oldL oldR (cdr lat)))))))
+
+;;; 142
+(define multiinsertLR&co
+  (lambda (new oldL oldR lat col)
+    (cond
+     ((null? lat)
+      (col '() 0 0))
+     ((eq? (car lat) oldL)
+      (cons new
+            (cons (car lat)
+                  (multiinsertLR&co new oldL oldR (cdr lat)
+                                 (lambda (newlat seenL seenR)
+                                   (col (cons new (cons oldL newlat)) (add1 seenL) seenR))))))
+     ((eq? (car lat) oldR)
+      (cons (car lat)
+            (cons new
+                  (multiinsertLR&co new oldL oldR (cdr lat)
+                                 (lambda (newlat seenL seenR)
+                                   (col (cons oldR (cons new newlat)) seenL (add1 seenR)))))))
+     (else
+      (cons (car lat) (multiinsertLR&co new oldL oldR (cdr lat)
+                                     (lambda (newlat seenL seenR)
+                                       (col (cons (car lat) newlat) seenL seenR))))))))
+
+;;; 144
+(define even?
+  (lambda (n)
+    (= (* (/ n 2) 2) n)))
