@@ -847,4 +847,52 @@
 ;;; 144
 (define even?
   (lambda (n)
-    (= (* (/ n 2) 2) n)))
+    (= (* (quotient n 2) 2) n)))
+
+;; 144
+(define evens-only*
+  (lambda (l)
+    (cond
+     ((null? l) (quote ()))
+     ((atom? (car l))
+      (cond
+       ((even? (car l))
+        (cons (car l) (evens-only* (cdr l))))
+       (else
+        (evens-only* (cdr l)))))
+     (else
+      (cons (evens-only* (car l)) (evens-only* (cdr l)))))))
+
+;; 145
+;; p = product (evens)
+;; s = sum (odds)
+(define evens-only*&co
+  (lambda (l col)
+    (cond
+     ((null? l) (col (quote ()) 1 0))
+     ((atom? (car l))
+      (cond
+       ((even? (car l))
+        (evens-only*&co (cdr l)
+                        (lambda (newl p s)
+                          (col (cons (car l) newl)
+                               (x (car l) p) s))))
+       (else
+        (evens-only*&co (cdr l)
+                        (lambda (newl p s)
+                          (col newl p (+ (car l) s)))))))
+     (else
+      (evens-only*&co (car l)
+                      (lambda (al ap as)
+                        (evens-only*&co (cdr l)
+                                        (lambda (dl dp ds)
+                                          (col (cons al dl)
+                                               (x ap dp)
+                                               (+ as ds))))))))))
+
+(define the-last-friend
+  (lambda (newl product sum)
+    (cons sum
+          (cons product newl))))  
+;; C-c M-e eval-def-and-go
+;; C-c M-r eval-region-and-go  
