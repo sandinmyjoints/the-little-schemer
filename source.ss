@@ -16,7 +16,7 @@
 (define insertL
   (lambda (new old l)
     (cond
-     ((null? l) ())
+     ((null? l) (quote ()))
      ((eq? old (car l)) (cons new (cons old (insertL new old (cdr l)))))
      (else
       (cons (car l) (insertL new old (cdr l)))))))
@@ -26,7 +26,7 @@
 (define firsts
   (lambda (l)
     (cond
-     ((null? l) '())
+     ((null? l) (quote ()))
      (else
       (cons (car (car l)) (firsts (cdr l)))))))
 
@@ -241,7 +241,7 @@
 (define rember*
   (lambda (a l)
     (cond
-     ((null? l) ())
+     ((null? l) (quote ()))
      (else
       (cond
        ((atom? (car l))
@@ -256,7 +256,7 @@
 (define insertR*
   (lambda (new old l)
     (cond
-     ((null? l) ())
+     ((null? l) (quote ()))
      (else
       (cond
        ((eq? (car l) old) (cons old (cons new (insertR* new old (cdr l)))))
@@ -282,7 +282,7 @@
 (define subst*
   (lambda (new old l)
     (cond
-     ((null? l) ())
+     ((null? l) (quote ()))
      ((atom? (car l))
       (cond
        ((eq? old (car l)) (cons new (subst* new old (cdr l))))
@@ -295,7 +295,7 @@
 (define insertL*
   (lambda (new old l)
     (cond
-     ((null? l) ())
+     ((null? l) (quote ()))
      ((atom? (car l))
       (cond
        ((eq? old (car l)) (cons new (cons old (insertL* new old (cdr l)))))
@@ -360,11 +360,11 @@
   ;; Simplified.
   (lambda (s l)
     (cond
-     ((null? l) ('()))
+     ((null? l) ((quote ())))
      ((equal? (car l) s) (cdr l))
      (else (cons (car l)
                  (rember s
-                         (cdr l)))))))))
+                         (cdr l)))))))
 
 ;;; note: s-exp is an atom or a (possibly empty) list of s-exps.
 ;;; note: * functions recur on both car and cdr
@@ -443,7 +443,7 @@
 ;;; 108
 (define edd1
   (lambda (n)
-    (cons '() n)))
+    (cons (quote ()) n)))
 
 ;;; 108
 (define zub1
@@ -480,7 +480,7 @@
 (define makeset
   (lambda (lat)
     (cond
-     ((null? lat) ())
+     ((null? lat) (quote ()))
      ((member? (car lat) (cdr lat)) (makeset (cdr lat)))
      (else
       (cons (car lat) (makeset (cdr lat)))))))
@@ -490,7 +490,7 @@
   ;; Rewritten with equal?.
   (lambda (a lat)
     (cond
-     ((null? lat) (quote ()))
+     ((null? lat) (quote (quote ())))
      (else
       (cond
        ((equal? (car lat) a)
@@ -503,7 +503,7 @@
   ;; Using multirember.
   (lambda (lat)
     (cond
-     ((null? lat) ())
+     ((null? lat) (quote ()))
      (makeset (cons (car lat) (multirember (car lat) (cdr lat)))))))
 
 ;;;
@@ -565,7 +565,7 @@
 (define intersect
  (lambda (set1 set2)
    (cond
-    ((null? set1) '())
+    ((null? set1) (quote ()))
     (else
      (cond
       ((member? (car set1) set2)
@@ -619,7 +619,7 @@
 ;;; 119
 (define build
   (lambda (s1 s2)
-    (cons s1 (cons s2 '()))))
+    (cons s1 (cons s2 (quote ())))))
 
 ;;; 119
 (define third
@@ -635,7 +635,7 @@
 (define revrel
   (lambda (rel)
     (cond
-     ((null? rel) '())
+     ((null? rel) (quote ()))
      (else
       (cons
        (build (second (car rel)) (first (car rel)))
@@ -663,7 +663,7 @@
 (define rember-f
   (lambda (test? a l)
     (cond
-     ((null? l) '())
+     ((null? l) (quote ()))
      ((funcall test? a (car l)) (cdr l))
      (else
       (cons (car l) (rember-f test? a (cdr l)))))))
@@ -681,7 +681,7 @@
   (lambda (test?)
     (lambda (a l)
       (cond
-       ((null? l) '())
+       ((null? l) (quote ()))
        ((funcall test? a (car l))
         (cdr l))
        (else
@@ -692,7 +692,7 @@
   (lambda (test?)
     (lambda (new old l)
     (cond
-     ((null? l) ())
+     ((null? l) (quote ()))
      ((funcall test? old (car l))
       (cons new (cons old ((insertL-f test?) new old (cdr l)))))
      (else
@@ -703,7 +703,7 @@
   (lambda (test?)
     (lambda (new old l)
     (cond
-     ((null? l) ())
+     ((null? l) (quote ()))
      ((funcall test? old (car l))
       (cons old (cons new ((insertR-f test?) new old (cdr l)))))
      (else
@@ -714,7 +714,7 @@
   (lambda (inserter)
     (lambda (new old l)
       (cond
-       ((null? l) ())
+       ((null? l) (quote ()))
        ((funcall eq? old (car l))
         (funcall inserter new old ((insert-g inserter) new old (cdr l))))
        (else
@@ -775,7 +775,7 @@
   (lambda (test?)    
     (lambda (a lat)
       (cond
-       ((null? lat) '())
+       ((null? lat) (quote ()))
        ((test? a (car lat))        
         ((multirember-f test?) a (cdr lat)))
        (else
@@ -809,7 +809,7 @@
 (define multiinsertLR
   (lambda (new oldL oldR lat)
     (cond
-     ((null? lat) '())
+     ((null? lat) (quote ()))
      ((eq? oldL (car lat))
       (cons new
             (cons (car lat)
@@ -826,7 +826,7 @@
   (lambda (new oldL oldR lat col)
     (cond
      ((null? lat)
-      (col '() 0 0))
+      (col (quote ()) 0 0))
      ((eq? (car lat) oldL)
       (cons new
             (cons (car lat)
